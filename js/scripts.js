@@ -18,40 +18,6 @@ btn.classList.add('search-submit');
 btn.innerHTML = 'submit';
 document.getElementsByTagName('form')[0].appendChild(btn);
 
-const card = document.createElement('DIV');
-card.classList.add('card');
-document.querySelector('.gallery').appendChild(card);
-
-const imgContainer = document.createElement('DIV');
-imgContainer.classList.add('card-img-container');
-document.querySelector('.card').appendChild(imgContainer);
-
-const img = document.createElement('IMG');
-img.classList.add('card-img');
-img.src = 'https://placehold.it/90x90';
-img.alt = 'profile picture';
-document.querySelector('.card-img-container').appendChild(img);
-
-const infoContainer = document.createElement('DIV');
-infoContainer.classList.add('card-info-container');
-document.querySelector('.card').appendChild(infoContainer);
-
-const h3 = document.createElement('H3');
-h3.id = 'name';
-h3.classList.add('card-name-cap');
-h3.innerHTML = 'first last';
-document.querySelector('.card-info-container').appendChild(h3);
-
-const emailP = document.createElement('P');
-emailP.classList.add('card-text');
-emailP.innerHTML = 'email'
-document.querySelector('.card-info-container').appendChild(emailP);
-
-const cityP = document.createElement('P');
-cityP.classList.add('card-text');
-cityP.innerHTML = 'city, state'
-document.querySelector('.card-info-container').appendChild(cityP);
-
 // const modalContainer =  document.createElement('DIV');
 // modalContainer.classList.add('modal-container');
 // document.querySelector('.gallery').appendChild(modalContainer);
@@ -138,12 +104,12 @@ function fetchData(url) {
 }
 
 Promise.all([
-		fetchData('https://fsjs-public-api-backup.herokuapp.com/api'),
+		fetchData('https://randomuser.me/api/?results=12'),
 	])
 	// .then(data => console.log(data))
 	.then(data => {
-		const randomImage = data[0].results;
-        generateCardHTML(randomImage) 
+		const randomData = data[0].results;
+        generateCardHTML(randomData) 
     	})
 
 // ------------------------------------------
@@ -158,20 +124,48 @@ function checkStatus(response) {
 }
 
 function generateCardHTML(data) {
+
 	data.map(person => {
-        imgContainer.innerHTML = 
-         `
-          <img src=${person.picture.thumbnail}>
+		const card = document.createElement('DIV');
+		card.classList.add('card');
+		document.querySelector('.gallery').appendChild(card);
+		
+		const imgContainer = document.createElement('DIV');
+		imgContainer.classList.add('card-img-container');
+		card.appendChild(imgContainer);
+		
+		const img = document.createElement('IMG');
+		img.src = 'https://placehold.it/90x90';
+		img.alt = 'profile picture';
+		imgContainer.appendChild(img);	
+
+        imgContainer.innerHTML = `
+        <img class=${'card-img'} src=${person.picture.thumbnail}>
       `;
         
+		const infoContainer = document.createElement('DIV');
+		infoContainer.classList.add('card-info-container');
+		card.appendChild(infoContainer);
 
-		// infoContainer.innerHTML =
-		// 	`
-    //      <h3>${person.name.first}${' '}${person.name.last}</h3>
-    //      <p>${person.email}</p>
-    //      <p>${person.location.city}</p>
+		const h3 = document.createElement('H3');
+		h3.id = 'name';
+		h3.innerHTML = 'first last';
+		infoContainer.appendChild(h3);
 
-    // `;
+		const emailP = document.createElement('P');
+		emailP.innerHTML = 'email'
+		infoContainer.appendChild(emailP);
+
+		const cityP = document.createElement('P');
+		cityP.innerHTML = 'city, state'
+		infoContainer.appendChild(cityP);
+
+		infoContainer.innerHTML = `
+        <h3 class=${'card-name-cap'}> ${person.name.first}${' '}${person.name.last}</h3>
+        <p class=${'card-text'}>${person.email}</p>
+        <p class=${'card-text'}>${person.location.city}</p>
+
+    `;
 	});
 }
 
