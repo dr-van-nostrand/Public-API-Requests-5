@@ -18,83 +18,6 @@ btn.classList.add('search-submit');
 btn.innerHTML = 'submit';
 document.getElementsByTagName('form')[0].appendChild(btn);
 
-// const modalContainer =  document.createElement('DIV');
-// modalContainer.classList.add('modal-container');
-// document.querySelector('.gallery').appendChild(modalContainer);
-
-// const modal =  document.createElement('DIV');
-// modal.classList.add('modal');
-// document.querySelector('.modal-container').appendChild(modal);
-
-// const btnModalClose = document.createElement('BUTTON');
-// btnModalClose.type = 'button';
-// btnModalClose.id = 'modal-close-btn';
-// btnModalClose.classList.add('modal-close-btn');
-// btnModalClose.innerHTML = '<strong>x</strong>';
-// document.querySelector('.modal').appendChild(btnModalClose);
-
-// const modalInfoContainer = document.createElement('DIV');
-// modalInfoContainer.classList.add('modal-info-container');
-// document.querySelector('.modal').appendChild(modalInfoContainer);
-
-// const modalImg = document.createElement('IMG');
-// modalImg.classList.add('modal-img');
-// modalImg.src = 'https://placehold.it/125x125';
-// modalImg.alt = 'profile picture';
-// document.querySelector('.modal-info-container').appendChild(modalImg);
-
-// const modalH3 = document.createElement('H3');
-// modalH3.id = 'name';
-// modalH3.classList.add('modal-name-cap');
-// modalH3.innerHTML= 'name'
-// document.querySelector('.modal-info-container').appendChild(modalH3);
-
-// const modalMail = document.createElement('P');
-// modalMail.classList.add('modal-text');
-// modalMail.innerHTML= 'email'
-// document.querySelector('.modal-info-container').appendChild(modalMail);
-
-// const modalCity = document.createElement('P');
-// modalCity.classList.add('modal-text');
-// modalCity.innerHTML= 'city'
-// document.querySelector('.modal-info-container').appendChild(modalCity);
-
-// const hr = document.createElement('HR');
-// document.querySelector('.modal-info-container').appendChild(hr);
-
-// const modalPhone = document.createElement('P');
-// modalPhone.classList.add('modal-text');
-// modalPhone.innerHTML= '(555) 555-5555';
-// document.querySelector('.modal-info-container').appendChild(modalPhone);
-
-// const modalAddress = document.createElement('P');
-// modalAddress.classList.add('modal-text');
-// modalAddress.innerHTML= '123 Portland Ave., Portland, OR 97204';
-// document.querySelector('.modal-info-container').appendChild(modalAddress);
-
-// const modalBD = document.createElement('P');
-// modalBD.classList.add('modal-text');
-// modalBD.innerHTML= 'Birthday: 10/21/2015';
-// document.querySelector('.modal-info-container').appendChild(modalBD);
-
-// const btnContainer = document.createElement('DIV');
-// btnContainer.classList.add('modal-btn-container');
-// document.querySelector('.modal-container').appendChild(btnContainer);
-
-// const btnPrev = document.createElement('BUTTON');
-// btnPrev.type = 'button';
-// btnPrev.id = 'modal-prev';
-// btnPrev.classList.add('modal-btn-container');
-// btnPrev.innerHTML= 'Prev';
-
-// document.querySelector('.modal-btn-container').appendChild(btnPrev);
-// const btnNext = document.createElement('BUTTON');
-// btnNext.type = 'button';
-// btnNext.id = 'modal-next';
-// btnNext.classList.add('modal-btn-container');
-// btnNext.innerHTML= 'Next';
-// document.querySelector('.modal-btn-container').appendChild(btnNext);
-
 // ------------------------------------------
 //  FETCH FUNCTIONS
 // ------------------------------------------
@@ -109,7 +32,8 @@ Promise.all([
 	// .then(data => console.log(data))
 	.then(data => {
 		const randomData = data[0].results;
-        generateCardHTML(randomData) 
+		generateCardHTML(randomData)
+		// console.log(data); 
     	})
 
 // ------------------------------------------
@@ -129,15 +53,15 @@ function generateCardHTML(data) {
 		const card = document.createElement('DIV');
 		card.classList.add('card');
 		document.querySelector('.gallery').appendChild(card);
-		
+
 		const imgContainer = document.createElement('DIV');
 		imgContainer.classList.add('card-img-container');
 		card.appendChild(imgContainer);
 		
-		const img = document.createElement('IMG');
-		img.src = 'https://placehold.it/90x90';
-		img.alt = 'profile picture';
-		imgContainer.appendChild(img);	
+		const imag = document.createElement('IMG');
+		imag.src = 'https://placehold.it/90x90';
+		imag.alt = 'profile picture';
+		imgContainer.appendChild(imag);	
 
         imgContainer.innerHTML = `
         <img class=${'card-img'} src=${person.picture.thumbnail}>
@@ -161,11 +85,108 @@ function generateCardHTML(data) {
 		infoContainer.appendChild(cityP);
 
 		infoContainer.innerHTML = `
-        <h3 class=${'card-name-cap'}> ${person.name.first}${' '}${person.name.last}</h3>
+        <h3 class=${'card-name cap'}> ${person.name.first}${' '}${person.name.last}</h3>
         <p class=${'card-text'}>${person.email}</p>
         <p class=${'card-text'}>${person.location.city}</p>
+	`;
+	
+		const modalContainer =  document.createElement('DIV');
+		modalContainer.classList.add('modal-container');
+		modalContainer.style.display = 'none';
+		document.body.appendChild(modalContainer);
 
-    `;
+		const modal =  document.createElement('DIV');
+		modal.classList.add('modal');
+		modalContainer.appendChild(modal);
+
+		const btnModalClose = document.createElement('BUTTON');
+		btnModalClose.type = 'button';
+		btnModalClose.id = 'modal-close-btn';
+		btnModalClose.classList.add('modal-close-btn');
+		btnModalClose.innerHTML = '<strong>x</strong>';
+		modal.appendChild(btnModalClose);
+
+		const modalInfoContainer = document.createElement('DIV');
+		modalInfoContainer.classList.add('modal-info-container');
+		modal.appendChild(modalInfoContainer);
+
+		const modalImg = document.createElement('IMG');
+		modalImg.src = 'https://placehold.it/125x125';
+		modalImg.alt = 'profile picture';
+		modalInfoContainer.appendChild(modalImg);
+
+		const modalH3 = document.createElement('H3');
+		modalH3.id = 'name';
+		modalH3.innerHTML= 'name'
+		modalInfoContainer.appendChild(modalH3);		
+
+		const modalMail = document.createElement('P');
+		// modalMail.classList.add('modal-text');
+		modalMail.innerHTML= 'email'
+		modalInfoContainer.appendChild(modalMail);
+		
+		const modalCity = document.createElement('P');
+		modalCity.innerHTML= 'city'
+		modalInfoContainer.appendChild(modalCity);	
+
+		const modalPhone = document.createElement('P');
+		modalPhone.innerHTML= '(555) 555-5555';
+		modalInfoContainer.appendChild(modalPhone);
+		
+		const modalAddress = document.createElement('P');
+		modalAddress.innerHTML= '123 Portland Ave., Portland, OR 97204';
+		modalInfoContainer.appendChild(modalAddress);
+		
+		const modalBD = document.createElement('P');
+		modalBD.innerHTML= 'Birthday: 10/21/2015';
+		modalInfoContainer.appendChild(modalBD);
+		
+		const btnContainer = document.createElement('DIV');
+		btnContainer.classList.add('modal-btn-container');
+		modalContainer.appendChild(btnContainer);
+		
+		const btnPrev = document.createElement('BUTTON');
+		btnPrev.type = 'button';
+		btnPrev.id = 'modal-prev';
+		btnPrev.classList.add('modal-btn-container');
+		btnPrev.innerHTML= 'Prev';
+		btnContainer.appendChild(btnPrev);
+		
+		const btnNext = document.createElement('BUTTON');
+		btnNext.type = 'button';
+		btnNext.id = 'modal-next';
+		btnNext.classList.add('modal-btn-container');
+		btnNext.innerHTML= 'Next';
+		btnContainer.appendChild(btnNext);
+
+		btnModalClose.addEventListener('click', function() {
+			modalContainer.style.display = 'none';
+		});	
+
+		card.addEventListener('click', function() {
+			modalContainer.style.display = 'block';
+		});	
+
+		modalInfoContainer.innerHTML = `
+		<img class=${'modal-img'} src=${person.picture.large}>
+		<h3 id='name' class='modal-name cap'> ${person.name.first} ${person.name.last} </h3>
+		<p class=${'modal-text'}>${person.email}</p>
+		<p class=${'modal-text-cap'}>${person.location.city}</p>
+		<hr>
+		<p class=${'modal-text'}>${person.phone}</p>
+		<p class=${'modal-text'}>${person.location.street.number}
+		${' '}${person.location.street.name}
+		${' '}${person.location.city}
+		${' '}${person.location.state}
+		${' '}${person.location.postcode}</p>
+        <p class=${'modal-text'}>${person.dob.date}</p>						
+	  `;
+		
+
+  
 	});
 }
+
+
+
 
