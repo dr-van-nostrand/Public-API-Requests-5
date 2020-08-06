@@ -1,23 +1,8 @@
-const form = document.createElement('FORM');
-form.action = '#';
-form.method = 'get';
-document.querySelector('.search-container').appendChild(form);
+const gallery = document.querySelector('#gallery');
 
-const search = document.createElement('INPUT');
-search.type = 'search';
-search.id = 'search-input';
-search.classList.add('search-input');
-search.placeholder = 'Search...';
-document.getElementsByTagName('form')[0].appendChild(search);
-
-const btn = document.createElement('BUTTON');
-btn.type = ' submit';
-btn.value = '&#x1F50D';
-btn.id = 'search-submit';
-btn.classList.add('search-submit');
-btn.innerHTML = 'submit';
-document.getElementsByTagName('form')[0].appendChild(btn);
-
+// modalContainer.style.display = 'none';
+// const list = [];
+// console.log(list);
 // ------------------------------------------
 //  FETCH FUNCTIONS
 // ------------------------------------------
@@ -27,7 +12,7 @@ function fetchData(url) {
 }
 
 Promise.all([
-		fetchData('https://randomuser.me/api/?results=12'),
+		fetchData('https://randomuser.me/api/?results=12&nat=us'),
 	])
 	// .then(data => console.log(data))
 	.then(data => {
@@ -48,128 +33,41 @@ function checkStatus(response) {
 }
 
 function generateCardHTML(data) {
+	// const arrData = data;
 
 	data.map(person => {
-		const card = document.createElement('DIV');
-		card.classList.add('card');
-		document.querySelector('.gallery').appendChild(card);
-
-		const imgContainer = document.createElement('DIV');
-		imgContainer.classList.add('card-img-container');
-		card.appendChild(imgContainer);
-		
-		const imag = document.createElement('IMG');
-		imag.src = 'https://placehold.it/90x90';
-		imag.alt = 'profile picture';
-		imgContainer.appendChild(imag);	
-
-        imgContainer.innerHTML = `
-        <img class=${'card-img'} src=${person.picture.thumbnail}>
-      `;
-        
-		const infoContainer = document.createElement('DIV');
-		infoContainer.classList.add('card-info-container');
-		card.appendChild(infoContainer);
-
-		const h3 = document.createElement('H3');
-		h3.id = 'name';
-		h3.innerHTML = 'first last';
-		infoContainer.appendChild(h3);
-
-		const emailP = document.createElement('P');
-		emailP.innerHTML = 'email'
-		infoContainer.appendChild(emailP);
-
-		const cityP = document.createElement('P');
-		cityP.innerHTML = 'city, state'
-		infoContainer.appendChild(cityP);
-
-		infoContainer.innerHTML = `
-        <h3 class=${'card-name cap'}> ${person.name.first}${' '}${person.name.last}</h3>
-        <p class=${'card-text'}>${person.email}</p>
-        <p class=${'card-text'}>${person.location.city}</p>
+		const card = document.createElement('div');
+		card.className = 'card';
+		gallery.appendChild(card);
+		card.innerHTML =
+			`
+			<div class="card-img-container">
+			<img class=${'card-img'} src=${person.picture.large}>
+            </div>
+            <div class="card-info-container">
+		    <h3 id=name'class=${'card-name cap'}> ${person.name.first}${' '}${person.name.last}</h3>
+        	<p class=${'card-text'}>${person.email}</p>
+			<p class=${'card-text'}>${person.location.city}</p>
+			</div>
 	`;
-	
-		const modalContainer =  document.createElement('DIV');
-		modalContainer.classList.add('modal-container');
-		modalContainer.style.display = 'none';
-		document.body.appendChild(modalContainer);
+	card.addEventListener('click', () => {
+		generateModal(data, person);
+	})
+	});
+}
 
-		const modal =  document.createElement('DIV');
-		modal.classList.add('modal');
-		modalContainer.appendChild(modal);
-
-		const btnModalClose = document.createElement('BUTTON');
-		btnModalClose.type = 'button';
-		btnModalClose.id = 'modal-close-btn';
-		btnModalClose.classList.add('modal-close-btn');
-		btnModalClose.innerHTML = '<strong>x</strong>';
-		modal.appendChild(btnModalClose);
-
-		const modalInfoContainer = document.createElement('DIV');
-		modalInfoContainer.classList.add('modal-info-container');
-		modal.appendChild(modalInfoContainer);
-
-		const modalImg = document.createElement('IMG');
-		modalImg.src = 'https://placehold.it/125x125';
-		modalImg.alt = 'profile picture';
-		modalInfoContainer.appendChild(modalImg);
-
-		const modalH3 = document.createElement('H3');
-		modalH3.id = 'name';
-		modalH3.innerHTML= 'name'
-		modalInfoContainer.appendChild(modalH3);		
-
-		const modalMail = document.createElement('P');
-		// modalMail.classList.add('modal-text');
-		modalMail.innerHTML= 'email'
-		modalInfoContainer.appendChild(modalMail);
-		
-		const modalCity = document.createElement('P');
-		modalCity.innerHTML= 'city'
-		modalInfoContainer.appendChild(modalCity);	
-
-		const modalPhone = document.createElement('P');
-		modalPhone.innerHTML= '(555) 555-5555';
-		modalInfoContainer.appendChild(modalPhone);
-		
-		const modalAddress = document.createElement('P');
-		modalAddress.innerHTML= '123 Portland Ave., Portland, OR 97204';
-		modalInfoContainer.appendChild(modalAddress);
-		
-		const modalBD = document.createElement('P');
-		modalBD.innerHTML= 'Birthday: 10/21/2015';
-		modalInfoContainer.appendChild(modalBD);
-		
-		const btnContainer = document.createElement('DIV');
-		btnContainer.classList.add('modal-btn-container');
-		modalContainer.appendChild(btnContainer);
-		
-		const btnPrev = document.createElement('BUTTON');
-		btnPrev.type = 'button';
-		btnPrev.id = 'modal-prev';
-		btnPrev.classList.add('modal-btn-container');
-		btnPrev.innerHTML= 'Prev';
-		btnContainer.appendChild(btnPrev);
-		
-		const btnNext = document.createElement('BUTTON');
-		btnNext.type = 'button';
-		btnNext.id = 'modal-next';
-		btnNext.classList.add('modal-btn-container');
-		btnNext.innerHTML= 'Next';
-		btnContainer.appendChild(btnNext);
-
-		btnModalClose.addEventListener('click', function() {
-			modalContainer.style.display = 'none';
-		});	
-
-		card.addEventListener('click', function() {
-			modalContainer.style.display = 'block';
-		});	
-
-		modalInfoContainer.innerHTML = `
+function generateModal(data, person) {
+	const body = document.getElementsByTagName('BODY')[0];
+	const modalContainer = document.createElement('div');
+	modalContainer.className = 'modal-container';
+	body.appendChild(modalContainer);
+	modalContainer.innerHTML =
+		`
+		<div class="modal">
+		<button type="button" id="modal-close-btn" class="modal-close-btn"><strong>X</strong></button>
+		<div class="modal-info-container">
 		<img class=${'modal-img'} src=${person.picture.large}>
-		<h3 id='name' class='modal-name cap'> ${person.name.first} ${person.name.last} </h3>
+		<h3 id=name' class='modal-name cap'> ${person.name.first} ${person.name.last} </h3>
 		<p class=${'modal-text'}>${person.email}</p>
 		<p class=${'modal-text-cap'}>${person.location.city}</p>
 		<hr>
@@ -179,14 +77,91 @@ function generateCardHTML(data) {
 		${' '}${person.location.city}
 		${' '}${person.location.state}
 		${' '}${person.location.postcode}</p>
-        <p class=${'modal-text'}>${person.dob.date}</p>						
-	  `;
-		
+		<p class=${'modal-text'}>${person.dob.date}</p>		
+		</div>
+		<div class="modal-btn-container">
+		<button type="button" id="modal-prev" class="modal-prev btn">Prev</button>
+		<button type="button" id="modal-next" class="modal-next btn">Next</button>
+		</div>
+        </div>				
+	  
+	`;
+	const btnModalClose = document.querySelector('#modal-close-btn');
+	btnModalClose.addEventListener('click', () => {
+        body.removeChild(modalContainer);
+	})
 
-  
-	});
+	const btnPrev = document.querySelector('#modal-prev');
+    btnPrev.addEventListener('click', () => {
+        let prevIndex = data.indexOf(person)-1;
+        body.removeChild(modalContainer);
+        if(prevIndex < 0 ){
+            prevIndex = 11;
+            generateModal(data, data[prevIndex]);
+        } else {
+            generateModal(data, data[prevIndex]);
+        }
+	})
+	
+	const btnNext = document.querySelector('#modal-next');
+    btnNext.addEventListener('click', () => {
+        let btnNext = data.indexOf(person)+1;
+        body.removeChild(modalContainer);
+        if(btnNext > 11 ){
+            btnNext = 0;
+            generateModal(data, data[btnNext]);
+        } else {
+            generateModal(data, data[btnNext]);
+        }
+    })
 }
 
 
 
 
+
+// ------------------------------------------
+//  SEARCH FUNCTIONS
+// ------------------------------------------
+	
+
+// const form = document.createElement('FORM');
+// form.action = '#';
+// form.method = 'get';
+// document.querySelector('.search-container').appendChild(form);
+
+// const searchField = document.createElement('INPUT');
+// searchField.type = 'search';
+// searchField.id = 'search-input';
+// searchField.classList.add('search-input');
+// searchField.placeholder = 'Search...';
+// document.getElementsByTagName('form')[0].appendChild(searchField);
+
+// const btn = document.createElement('BUTTON');
+// btn.type = ' submit';
+// btn.value = '&#x1F50D';
+// btn.id = 'search-submit';
+// btn.classList.add('search-submit');
+// btn.innerHTML = 'submit';
+// document.getElementsByTagName('form')[0].appendChild(btn);
+
+// //search Funtion
+// function searchNames(searchF, lista) {
+// 	for (let i = 0; i < lista.length; i++) {
+// 		if ((searchF.length !== 0 && lista[i].textContent.toLowerCase().includes(searchF.toLowerCase()))) {
+//             lista[i].parentNode.parentNode.style.display = '';
+//         } else if (searchF.length == 0) {
+//             lista[i].parentNode.parentNode.style.display = '';
+//         } else {
+//             lista[i].parentNode.parentNode.style.display = 'none';
+//         }
+// 	}
+// }
+
+// const input = document.querySelector('#search-input');
+// input.addEventListener('keyup', (e) => {
+// 	e.preventDefault();
+// 	if (input.value != '') {
+// 		searchNames(input.value, list);
+// 	}
+// });
