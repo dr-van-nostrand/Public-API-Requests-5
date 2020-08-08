@@ -13,7 +13,6 @@ Promise.all([
 	.then(data => {
 		const randomData = data[0].results;
 		generateCardHTML(randomData)
-		// console.log(data); 
 	})
 // ------------------------------------------
 //  HELPER FUNCTIONS
@@ -47,11 +46,16 @@ function generateCardHTML(data) {
 			generateModal(data, person);
 		})
 	});
-	const names = document.querySelectorAll('#name');
-    for (let i = 0; i < names.length; i++) {
-        list.push(names[i]);
-    }
-}
+	  const form = document.querySelector('.search-container')
+	  form.innerHTML = `
+		<form action="#" method="get">
+		  <input type="search" id="search-input" class="search-input" placeholder="Search...">
+		  <input type="submit" value="&#x1F50D;" id="search-submit" class="search-submit">
+		</form>
+	  `
+	  searchInput = document.getElementById('search-input')
+	  searchNames(searchInput)
+};
 
 function generateModal(data, person) {
 	const body = document.getElementsByTagName('BODY')[0];
@@ -113,46 +117,19 @@ function generateModal(data, person) {
 // ------------------------------------------
 //  SEARCH FUNCTIONS
 // ------------------------------------------
-const form = document.createElement('FORM');
-form.action = '#';
-form.method = 'get';
-document.querySelector('.search-container').appendChild(form);
+function searchNames(searchInput) {
+	const names = document.querySelectorAll('.card-name')
+	searchInput.addEventListener('keyup', (e) => {
+		const searchString = e.target.value
 
-const searchField = document.createElement('INPUT');
-searchField.type = 'search';
-searchField.id = 'search-input';
-searchField.classList.add('search-input');
-searchField.placeholder = 'Search...';
-document.getElementsByTagName('form')[0].appendChild(searchField);
-
-const btn = document.createElement('BUTTON');
-btn.type = ' submit';
-btn.value = '&#x1F50D';
-btn.id = 'search-submit';
-btn.classList.add('search-submit');
-btn.innerHTML = 'submit';
-document.getElementsByTagName('form')[0].appendChild(btn);
-
-// //search Funtion
-const list = [];
-
-function searchNames(search, list) {
-
-	for (let i = 0; i < list.length; i++) {
-		
-		if ((search.length !== 0 && list[i].textContent.toLowerCase().includes(search.toLowerCase()))) {
-            list[i].parentNode.parentNode.style.display = '';
-        } else if (search.length == 0) {
-            list[i].parentNode.parentNode.style.display = '';
-        } else {
-            list[i].parentNode.parentNode.style.display = 'none';
-        }
-	}
-}
-const input = document.querySelector('#search-input');
-input.addEventListener('keyup', (e) => {
-	e.preventDefault();
-	if (input.value != '') {
-		searchNames(input.value, list);
-	}
+		for (let i=0; i<names.length; i++){
+			if (!(names[i].innerHTML.toLowerCase().includes(searchString.toLowerCase()))) {
+			  names[i].parentElement.parentElement.style.display = 'none'
+			} else {
+			  names[i].parentElement.parentElement.style.display = ''
+			}
+		  }
 });
+
+
+}
