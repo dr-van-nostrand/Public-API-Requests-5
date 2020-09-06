@@ -1,5 +1,4 @@
 const gallery = document.querySelector('#gallery');
-
 // ------------------------------------------
 //  FETCH FUNCTIONS
 // ------------------------------------------
@@ -8,12 +7,11 @@ function fetchData(url) {
 		'Loos like there was a problem!', error))
 }
 Promise.all([
-		fetchData('https://randomuser.me/api/?results=12&nat=us'),
-	])
-	.then(data => {
-		const randomData = data[0].results;
-		generateCardHTML(randomData)
-	})
+	fetchData('https://randomuser.me/api/?results=12&nat=us'),
+]).then(data => {
+	const randomData = data[0].results;
+	generateCardHTML(randomData)
+})
 // ------------------------------------------
 //  HELPER FUNCTIONS
 // ------------------------------------------
@@ -46,15 +44,16 @@ function generateCardHTML(data) {
 			generateModal(data, person);
 		})
 	});
-	  const form = document.querySelector('.search-container')
-	  form.innerHTML = `
+	const form = document.querySelector('.search-container')
+	form.innerHTML =
+		`
 		<form action="#" method="get">
 		  <input type="search" id="search-input" class="search-input" placeholder="Search...">
 		  <input type="submit" value="&#x1F50D;" id="search-submit" class="search-submit">
 		</form>
 	  `
-	  searchInput = document.getElementById('search-input')
-	  searchNames(searchInput)
+	searchInput = document.getElementById('search-input')
+	searchNames(searchInput)
 };
 
 function generateModal(data, person) {
@@ -121,15 +120,12 @@ function searchNames(searchInput) {
 	const names = document.querySelectorAll('.card-name')
 	searchInput.addEventListener('keyup', (e) => {
 		const searchString = e.target.value
-
-		for (let i=0; i<names.length; i++){
+		for (let i = 0; i < names.length; i++) {
 			if (!(names[i].innerHTML.toLowerCase().includes(searchString.toLowerCase()))) {
-			  names[i].parentElement.parentElement.style.display = 'none'
+				names[i].parentElement.parentElement.style.display = 'none'
 			} else {
-			  names[i].parentElement.parentElement.style.display = ''
+				names[i].parentElement.parentElement.style.display = ''
 			}
-		  }
-});
-
-
+		}
+	});
 }
